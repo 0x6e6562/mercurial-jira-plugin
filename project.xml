@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <project>
     <pomVersion>3</pomVersion>
-    <id>atlassian-jira-mercurial-plugin</id>
+    <id>mercurial-jira-plugin</id>
     <name>JIRA Mercurial plugin</name>
-    <currentVersion>0.3.7.0.6</currentVersion>
+    <currentVersion>0.3.7.0.7</currentVersion>
     <organization>
         <name>XenSource, Inc</name>
     </organization>
@@ -76,10 +76,12 @@
             <id>webwork</id>
             <version>1.4</version>
         </dependency>
+<!--
         <dependency>
             <id>junit</id>
             <version>3.8.1</version>
         </dependency>
+-->
         <dependency>
             <id>jmock</id>
             <version>1.0.1</version>
@@ -145,6 +147,7 @@
                 </excludes>
             </resource>
         </resources>
+<!--
         <unitTestSourceDirectory>src/test/java</unitTestSourceDirectory>
         <unitTest>
             <includes>
@@ -160,5 +163,6 @@
                 </resource>
             </resources>
         </unitTest>
+-->
     </build>
 </project>

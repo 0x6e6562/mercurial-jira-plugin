@@ -1,7 +1,7 @@
 <atlassian-plugin key="com.xensource.jira.plugin.ext.mercurial" name="Mercurial Plugin">
     <plugin-info>
         <description>JIRA Mercurial Plugin</description>
-        <version>0.3.7.0.6</version>
+        <version>0.3.7.0.7</version>
         <application-version min="3.7" max="3.7"/>
         <vendor name="XenSource, Inc" url="http://www.xensource.com"/>
     </plugin-info>
