@@ -1,0 +1,40 @@
+<table cellpadding=2 cellspacing=0 border=0 width="100%">
+<tr>
+    <td bgcolor="#f0f0f0" width=10%><b>Repository</b></td>
+    <td bgcolor="#f0f0f0" width=10%><b>Changeset</b></td>
+    <td bgcolor="#f0f0f0" width=10%><b>Date</b></td>
+    <td bgcolor="#f0f0f0" width=10%><b>User</b></td>
+    <td bgcolor="#f0f0f0"><b>Message</b></td>
+</tr>
+<tr>
+    <td bgcolor="#ffffff" width=10% valign=top rowspan=3>$mercurial.repositoryDisplayName</td>
+    <td bgcolor="#ffffff" width=10% valign=top rowspan=3>$mercurial.linkRenderer.getRevisionLink($mercurial.revision)</td>
+    <td bgcolor="#ffffff" width=10% valign=top rowspan=3>$!mercurial.revision.date</td>
+    <td bgcolor="#ffffff" width=10% valign=top rowspan=3>$!mercurial.revision.author</td>
+    <td bgcolor="#ffffff">#makelinkedhtml($mercurial.revision.getMessage().trim())</td>
+</tr>
+<tr>
+    <td bgcolor="#f0f0f0"><b>Files Changed</b></td>
+</tr>
+<tr>
+    <td bgcolor="#ffffff">
+            #foreach ($changePath in $mercurial.revision.changedPaths)
+                #if ($mercurial.isDeleted($changePath) == true)
+                    <font color="#990000" size="-2"><b title="Delete">DEL</b></font>
+                #elseif ($mercurial.isAdded($changePath) == true)
+                    <font color="#009900" size="-2"><b title="Add">ADD</b></font>
+                #elseif ($mercurial.isModified($changePath) == true)
+<!--                    <font color="#999933" size="-2"><b title="Modify">MODIFY</b></font>-->
+                #elseif ($mercurial.isReplaced($changePath) == true)
+                    <font color="#999933" size="-2"><b title="Replace">REPLACE</b></font>
+                #else
+                    $changePath.action
+                #end
+                $mercurial.linkRenderer.getChangePathLink($mercurial.revision, $changePath)
+                <br>
+            #end
+    </td>
+</tr>
+</table>
+
+<br>

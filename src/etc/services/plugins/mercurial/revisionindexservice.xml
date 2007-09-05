@@ -1,0 +1,5 @@
+<changesservice id="hg-revisionindexservice">
+    <description>System service to retrieve latest Mercurial revisions</description>
+    <properties>
+    </properties>
+</changesservice>

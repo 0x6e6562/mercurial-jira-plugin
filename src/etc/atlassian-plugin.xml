@@ -1,0 +1,19 @@
+<atlassian-plugin key="com.xensource.jira.plugin.ext.mercurial" name="Mercurial Plugin">
+    <plugin-info>
+        <description>JIRA Mercurial Plugin</description>
+        <version>0.3.7.0.6</version>
+        <application-version min="3.7" max="3.7"/>
+        <vendor name="XenSource, Inc" url="http://www.xensource.com"/>
+    </plugin-info>
+
+    <issue-tabpanel key="mercurial-commits-tabpanel" name="Mercurial Changes Tab Panel" class="com.xensource.jira.plugin.ext.mercurial.issuetabpanels.changes.MercurialRevisionsTabPanel">
+        <resource type="i18n" name="i18n" location="templates.plugins.mercurial.issuetabpanels.mercurial_jira_plugin"/>
+        <description>Show Mercurial commits related to an issue in an issue tab panel.</description>
+        <label>Mercurial Commits</label>
+        <resource type="velocity" name="view" location="templates/plugins/mercurial/issuetabpanels/mercurial-commits-view.vm"/>
+    </issue-tabpanel>
+
+    <component key="mercurialManager" name="mercurial Manager" class="com.xensource.jira.plugin.ext.mercurial.MercurialRepositoryManagerImpl">
+        <interface>com.xensource.jira.plugin.ext.mercurial.MercurialRepositoryManager</interface>
+    </component>
+</atlassian-plugin>

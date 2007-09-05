@@ -1,0 +1,69 @@
+<project default="war" xmlns:j="jelly:core" xmlns:deploy="deploy" xmlns:ant="jelly:ant" xmlns:util="jelly:util">
+
+    <goal name="mercurial:dist" prereqs="clean,jar" description="Builds a releasable ZIP of the Mercurial plugin">
+        <echo>Building Mercurial plugin release</echo>
+        <j:set var="dist.name" value="${pom.standardToLegacyId(pom.id)}-${pom.currentVersion}"/>
+        <echo>Distribution name is : ${dist.name}</echo>
+
+        <!-- make a release directory - eg target/release/mercurial-1.0 -->
+        <j:set var="target.release.dir" value="${maven.build.dir}/release/${dist.name}"/>
+        <mkdir dir="${target.release.dir}"/>
+
+        <!-- copy the release files - README.txt etc -->
+        <copy preservelastmodified="true" todir="${target.release.dir}/">
+            <fileset dir="${maven.src.dir}/release">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <copy preservelastmodified="true" file="${maven.src.dir}/etc/mercurial-jira-plugin.properties"
+           tofile="${target.release.dir}/mercurial-jira-plugin.properties" overwrite="yes"/>
+
+        <!-- copy the two libraries -->
+        <mkdir dir="${target.release.dir}/lib"/>
+        <copy preservelastmodified="true" file="${maven.build.dir}/${dist.name}.jar"
+           todir="${target.release.dir}/lib" overwrite="yes"/>
+
+        <j:forEach var="lib" items="${pom.dependencies}">
+            <!-- copy the JAR to the shipped local repository if needed -->
+            <j:if test="${lib.getProperty('distribute.jar').equals('true')}">
+                <j:set var="dependent.projectId" value="${lib.projectId}"/>
+                <j:set var="temp" value="${lib.getGroupId()}"/>
+                <j:if test="${!empty(temp)}">
+                    <j:set var="dependent.projectId" value="${lib.getGroupId()}"/>
+                </j:if>
+                <copy preservelastmodified="true" todir="${target.release.dir}/lib">
+                    <fileset dir="${maven.repo.local}/${dependent.projectId}/jars">
+                        <include name="${lib.artifact}"/>
+                    </fileset>
+                </copy>
+            </j:if>
+        </j:forEach>
+
+        <!-- update the version number in the README.txt -->
+        <replace file="${target.release.dir}/README.txt" token="@VERSION@" value="${pom.currentVersion}"/>
+
+        <!-- copy source and build files so other people can build the plugin -->
+        <mkdir dir="${target.release.dir}/src"/>
+        <copy preservelastmodified="true" todir="${target.release.dir}">
+            <fileset dir="${maven.base.dir}">
+                <include name="src/**"/>
+                <include name="project.xml"/>
+                <include name="maven.xml"/>
+                <include name="project.properties"/>
+                <exclude name="**/CVS/**/*"/>
+            </fileset>
+        </copy>
+
+        <zip zipfile="${maven.build.dir}/${dist.name}.zip">
+            <zipfileset dir="${target.release.dir}" prefix="${dist.name}"/>
+        </zip>
+    </goal>
+
+    <goal name="mercurial:deploy" prereqs="mercurial:dist" description="Deploys the ZIP distribution">
+         <deploy:artifact
+              artifact="${maven.build.dir}/${dist.name}.zip"
+              type="distributions"
+              assureDirectoryCommand="mkdir -p" />
+    </goal>
+</project>
