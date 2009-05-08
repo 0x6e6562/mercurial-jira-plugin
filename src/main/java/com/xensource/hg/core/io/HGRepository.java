@@ -36,6 +36,7 @@ public class HGRepository {
     private Boolean myUpdateRepo = false;
 
     private static Logger log = Logger.getLogger(HGRepository.class);
+    private static final String DEFAULT_BRANCH = "default";
 
     public HGRepository(HGRepositoryLocation location, String cloneDir, Boolean updateRepo) {
         myLocation = location;
@@ -166,6 +167,7 @@ public class HGRepository {
 	String changesetShort = null;
 	String changesetFull = null;
 	String author = null;
+  String branch = DEFAULT_BRANCH;
 	Date date = null;
 	String files = null;
 	StringBuilder description = null;
@@ -183,6 +185,8 @@ public class HGRepository {
 		changesetFull = cs[1];
             } else if (lines[i].startsWith("user:        ")) {
                 author = lines[i].substring(13).split("@")[0];
+            } else if (lines[i].startsWith("branch:")) {
+                branch = lines[i].substring(7).trim();
             } else if (lines[i].startsWith("files:       ")) {
 		// The filenames appear on one line separated by spaces
 		files = lines[i].substring(13);
@@ -223,7 +227,7 @@ public class HGRepository {
 		    throw new HGException("incomplete log record: changesetShort=" + 
     changesetShort + ", changesetFull=" + changesetFull + ", author=" + author + ", date=" + date + ", files=" + files + ", description " + description);
                 }		
-		HGLogEntry dummyData = new HGLogEntry(changedPathsMap, Long.parseLong(changesetShort), changesetFull, author, date, description.toString());
+		HGLogEntry dummyData = new HGLogEntry(changedPathsMap, Long.parseLong(changesetShort), changesetFull, author, date, branch, description.toString());
 		handler.handleLogEntry(dummyData);
 		count++;
 		log.debug("Added a new changeset: " + changesetShort);
@@ -232,6 +236,7 @@ public class HGRepository {
 		changesetShort = null;
 		changesetFull = null;
 		author = null;
+		branch = DEFAULT_BRANCH;
 		files = null;
 		description = null;
             } else {

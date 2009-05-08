@@ -230,7 +230,7 @@ public class RevisionIndexer
                         if (log.isDebugEnabled())
                             log.debug("Retrieved #" + logEntry.getShortRevision() + " : " + logEntry.getMessage());
 
-                        if (TextUtils.stringSet(logEntry.getMessage()) && JiraKeyUtils.isKeyInString(logEntry.getMessage()))
+                        if (isInteresting(logEntry))
                         {
                             logEntries.add(logEntry);
                         }
@@ -250,7 +250,7 @@ public class RevisionIndexer
                         for (Iterator iterator = logEntries.iterator(); iterator.hasNext();)
                         {
                             HGLogEntry logEntry = (HGLogEntry) iterator.next();
-                            if (TextUtils.stringSet(logEntry.getMessage()) && JiraKeyUtils.isKeyInString(logEntry.getMessage()))
+                            if (isInteresting(logEntry))
                             {
                                 if (!hasDocument(repoId, logEntry.getShortRevision(), reader))
                                 {
@@ -280,6 +280,16 @@ public class RevisionIndexer
 
             }  // while
         }
+    }
+
+    private boolean isInteresting(HGLogEntry logEntry) {
+      if (TextUtils.stringSet(logEntry.getMessage()) && JiraKeyUtils.isKeyInString(logEntry.getMessage()))
+        return true;
+
+      if (TextUtils.stringSet(logEntry.getBranchName()) &&  JiraKeyUtils.isKeyInString(logEntry.getBranchName()))
+        return true;
+
+      return false;
     }
 
     /**
@@ -374,9 +384,15 @@ public class RevisionIndexer
             doc.add(new Field(FIELD_DATE, logEntry.getDate().toString(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 
         // relevant issue keys
-        List keys = JiraKeyUtils.getIssueKeysFromString(logEntry.getMessage());
+        List logEntryKeys = JiraKeyUtils.getIssueKeysFromString(logEntry.getMessage());
+        List branchKeys = JiraKeyUtils.getIssueKeysFromString(logEntry.getBranchName());
 
-        for (Iterator iterator = keys.iterator(); iterator.hasNext();)
+        for (Iterator iterator = logEntryKeys.iterator(); iterator.hasNext();)
+        {
+            String key = (String) iterator.next();
+            doc.add(new Field(FIELD_ISSUEKEY, key, Field.Store.YES, Field.Index.UN_TOKENIZED));
+        }
+        for (Iterator iterator = branchKeys.iterator(); iterator.hasNext();)
         {
             String key = (String) iterator.next();
             doc.add(new Field(FIELD_ISSUEKEY, key, Field.Store.YES, Field.Index.UN_TOKENIZED));

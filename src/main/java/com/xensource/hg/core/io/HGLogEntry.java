@@ -25,13 +25,15 @@ public class HGLogEntry {
     private String myAuthor;
     private Date myDate;
     private String myMessage;
+    private String myBranchName;
     private Map myChangedPaths;
-    
-    public HGLogEntry(Map changedPaths, long shortRevision, String fullRevision, String author, Date date, String message) {
+
+    public HGLogEntry(Map changedPaths, long shortRevision, String fullRevision, String author, Date date, String branchName, String message) {
         myShortRevision = shortRevision;
         myFullRevision = fullRevision;
         myAuthor = author;
         myDate = date;
+        myBranchName = branchName;
         myMessage = message;
         myChangedPaths = changedPaths;
     }
@@ -54,5 +56,9 @@ public class HGLogEntry {
     }
     public String getFullRevision() {
         return myFullRevision;
+    }
+
+    public String getBranchName() {
+      return myBranchName;
     }
 }
