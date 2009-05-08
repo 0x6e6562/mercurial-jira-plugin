@@ -435,19 +435,22 @@ public class RevisionIndexer
                 for (int i = 0; i < hits.length(); i++)
                 {
                     Document doc = hits.doc(i);
-                    HGLogEntry logEntry = mercurialRepositoryManager.getRepository(doc.get(FIELD_REPOSITORY)).getLogEntry(Long.parseLong(doc.get(FIELD_REVISIONNUMBER)));
+                    final long revision = Long.parseLong(doc.get(FIELD_REVISIONNUMBER));
+                    final String repositoryId = doc.get(FIELD_REPOSITORY);
+                    MercurialManager repo = mercurialRepositoryManager.getRepository(repositoryId);
+                    HGLogEntry logEntry = repo.getLogEntry(revision);
                     if (logEntry == null)
                     {
-                        log.error("Could not find log message for revision: " + Long.parseLong(doc.get(FIELD_REVISIONNUMBER)));
+                        log.error("Could not find log message for revision: " + revision);
                     }
                     else
                     {
                         // Look for list of map entries for repository
-                        List entries = (List) logEntries.get(doc.get(FIELD_REPOSITORY));
+                        List entries = (List) logEntries.get(repositoryId);
                         if (entries == null)
                         {
                             entries = new ArrayList();
-                            logEntries.put(doc.get(FIELD_REPOSITORY), entries);
+                            logEntries.put(repositoryId, entries);
                         }
                         entries.add(logEntry);
                     }
