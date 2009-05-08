@@ -250,6 +250,7 @@ public class RevisionIndexer
                         for (Iterator iterator = logEntries.iterator(); iterator.hasNext();)
                         {
                             HGLogEntry logEntry = (HGLogEntry) iterator.next();
+                            // TODO This call to isInteresting looks redundant
                             if (isInteresting(logEntry))
                             {
                                 if (!hasDocument(repoId, logEntry.getShortRevision(), reader))
