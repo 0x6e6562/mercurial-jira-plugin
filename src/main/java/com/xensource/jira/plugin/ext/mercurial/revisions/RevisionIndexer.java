@@ -296,8 +296,8 @@ public class RevisionIndexer
 
             final boolean REQUIRED = true;
             final boolean NOT_PROHIBITED = false;
-            repoAndRevQuery.add(repoQuery, REQUIRED, NOT_PROHIBITED);
-            repoAndRevQuery.add(revQuery, REQUIRED, NOT_PROHIBITED);
+            repoAndRevQuery.add(repoQuery, BooleanClause.Occur.MUST);
+            repoAndRevQuery.add(revQuery, BooleanClause.Occur.MUST);
 
             Hits hits = searcher.search(repoAndRevQuery);
 
@@ -362,16 +362,16 @@ public class RevisionIndexer
         Document doc = new Document();
 
         // revision information
-        doc.add(Field.Keyword(FIELD_MESSAGE, logEntry.getMessage()));
+        doc.add(new Field(FIELD_MESSAGE, logEntry.getMessage(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 
         if (logEntry.getAuthor() != null)
-            doc.add(Field.Keyword(FIELD_AUTHOR, logEntry.getAuthor()));
+            doc.add(new Field(FIELD_AUTHOR, logEntry.getAuthor(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 
-        doc.add(Field.Keyword(FIELD_REPOSITORY, repoId));
-        doc.add(Field.Keyword(FIELD_REVISIONNUMBER, Long.toString(logEntry.getShortRevision())));
+        doc.add(new Field(FIELD_REPOSITORY, repoId, Field.Store.YES, Field.Index.UN_TOKENIZED));
+        doc.add(new Field(FIELD_REVISIONNUMBER, Long.toString(logEntry.getShortRevision()), Field.Store.YES, Field.Index.UN_TOKENIZED));
 
         if (logEntry.getDate() != null)
-            doc.add(Field.Keyword(FIELD_DATE, logEntry.getDate()));
+            doc.add(new Field(FIELD_DATE, logEntry.getDate().toString(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 
         // relevant issue keys
         List keys = JiraKeyUtils.getIssueKeysFromString(logEntry.getMessage());
@@ -379,7 +379,7 @@ public class RevisionIndexer
         for (Iterator iterator = keys.iterator(); iterator.hasNext();)
         {
             String key = (String) iterator.next();
-            doc.add(Field.Keyword(FIELD_ISSUEKEY, key));
+            doc.add(new Field(FIELD_ISSUEKEY, key, Field.Store.YES, Field.Index.UN_TOKENIZED));
         }
 
         return doc;
@@ -520,7 +520,7 @@ public class RevisionIndexer
             GenericValue issue = (GenericValue) iterator.next();
             String key = issue.getString(FIELD_ISSUEKEY);
             TermQuery termQuery = new TermQuery(new Term(FIELD_ISSUEKEY, key));
-            query.add(termQuery, false, false);
+            query.add(termQuery, BooleanClause.Occur.SHOULD);
         }
 
         final IndexReader reader = LuceneUtils.getIndexReader(getIndexPath());
