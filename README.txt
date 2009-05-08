@@ -1,4 +1,5 @@
 
+
 Atlassian JIRA Mercurial Plugin
 --------------------------------
 
@@ -16,6 +17,15 @@ commit logs associated with the issue.
 
 For example, if your commit message is: "This fixes JRA-52 and JRA-54" -
 the commit would be displayed in a tab when viewing JRA-52 and JRA-54.
+
+Building
+--------
+
+1. Ensure that you have maven 2 installed and functioning appropriately.
+2. Install the following restricted jars:
+  - http://java.sun.com/products/javamail/downloads/index.html
+  - http://java.sun.com/products/javabeans/glasgow/jaf.html
+3. Run mvn package in the plugin checkout directory.
 
 
 Quick Install Instructions
