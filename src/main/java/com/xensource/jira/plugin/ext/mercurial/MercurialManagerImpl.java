@@ -115,7 +115,14 @@ public class MercurialManagerImpl implements MercurialManager
                 if (log.isDebugEnabled())
                     log.debug("No cache - retrieving log message from " + getDisplayName() + " for revision: " + revision);
 
-                repository.log(new String[]{""}, revision, revision, true, true, new ISVNLogEntryHandler()
+                // TODO This is a total hack and is necessary because there is a worse
+                // hack in the log method of HgRepository that ignores revision number 1
+                // Anyway I think all of this revision numbers is bullshit, for hg you
+                // should probably use the cyrptographic id, because that is what a changeset
+                // is actually identified with
+                final long startRevision =  (revision == 1) ? 0 : revision;
+
+                repository.log(new String[]{""}, startRevision, revision, true, true, new ISVNLogEntryHandler()
                 {
                     public void handleLogEntry(HGLogEntry entry)
                     {

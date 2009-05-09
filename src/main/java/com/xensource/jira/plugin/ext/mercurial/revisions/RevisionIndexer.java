@@ -163,119 +163,101 @@ public class RevisionIndexer
     /**
      * This method updates the index, creating it if it does not already exist.
      */
-    public void updateIndex() throws IndexException, IOException, HGException
-    {
-        if (createIndexIfNeeded())
-        {
+    public void updateIndex() throws IndexException, IOException, HGException {
+        if (createIndexIfNeeded()) {
             Collection repositories = mercurialRepositoryManager.getRepositoryList();
             Iterator repoIter = repositories.iterator();
 
             // temp log comment
-            if (log.isDebugEnabled())
-            {
+            if (log.isDebugEnabled()) {
                 log.debug("repos size = " + repositories.size());
             }
 
-            while (repoIter.hasNext())
-            {
+            while (repoIter.hasNext()) {
                 HGRepository currentRepo = ((MercurialManager) repoIter.next()).getRepository();
                 String repoId = currentRepo.getRepositoryUUID();
                 long latestIndexedRevision = -1;
 
-                if (latestIndexedRevisionTbl.get(repoId) != null)
-                {
+                if (latestIndexedRevisionTbl.get(repoId) != null) {
                     latestIndexedRevision = ((Long) latestIndexedRevisionTbl.get(repoId)).longValue();
-                }
-                else
-                {
+                } else {
                     // no latestIndexedRevision, no need to update? This probably means
                     // that the repository have been removed from the file system
                     log.warn("Did not update index because null value in hash table for " + repoId);
                     continue;
                 }
 
-		log.info("Updating revision index for repository=" + repoId);
+                log.info("Updating revision index for repository=" + repoId);
 
                 if (latestIndexedRevision < 0)
                     latestIndexedRevision = updateLastRevisionIndexed(repoId);
 
-		log.info("Latest indexed revision for repository=" + repoId + " is : " + latestIndexedRevision);
+                log.info("Latest indexed revision for repository=" + repoId + " is : " + latestIndexedRevision);
 
                 long latestRevision = currentRepo.getLatestRevision();
 
-		log.info("Latest revision in repository=" + repoId + "  is : " + latestRevision);
+                log.info("Latest revision in repository=" + repoId + "  is : " + latestRevision);
 
-                if (latestRevision > 0 && latestRevision <= latestIndexedRevision)
-                {
-		    log.info("Have all the commits for repository=" + repoId + " - doing nothing.");
+                if (latestRevision > 0 && latestRevision <= latestIndexedRevision) {
+                    log.info("Have all the commits for repository=" + repoId + " - doing nothing.");
                     continue;
                 }
 
                 long retrieveStart = latestIndexedRevision + 1;
                 if (retrieveStart < 0)
                     retrieveStart = 0;
-		// Deal with empty repositories
-		if (latestIndexedRevision == 0) {
-                    retrieveStart = 0;		    
-		}
+                // Deal with empty repositories
+                if (latestIndexedRevision == 0) {
+                    retrieveStart = 0;
+                }
 
-		log.info("Retrieving revisions to index (between " + retrieveStart + " and " + latestRevision + ") for repository=" + repoId);
+                log.info("Retrieving revisions to index (between " + retrieveStart + " and " + latestRevision + ") for repository=" + repoId);
 
                 final Collection logEntries = new ArrayList();
 
-                currentRepo.log(new String[]{""}, retrieveStart, latestRevision, true, true, new ISVNLogEntryHandler()
-                {
-                    public void handleLogEntry(HGLogEntry logEntry)
-                    {
+                currentRepo.log(new String[]{""}, retrieveStart, latestRevision, true, true, new ISVNLogEntryHandler() {
+                    public void handleLogEntry(HGLogEntry logEntry) {
                         if (log.isDebugEnabled())
                             log.debug("Retrieved #" + logEntry.getShortRevision() + " : " + logEntry.getMessage());
 
-                        if (isInteresting(logEntry))
-                        {
+                        if (isInteresting(logEntry)) {
                             logEntries.add(logEntry);
                         }
                     }
                 });
-		log.info("Retrieved " + logEntries.size() + " relevant revisions to index (between " + retrieveStart + " and " + latestRevision + ") from repository=" + repoId);
+                log.info("Retrieved " + logEntries.size() + " relevant revisions to index (between " + retrieveStart + " and " + latestRevision + ") from repository=" + repoId);
 
                 IndexWriter writer = LuceneUtils.getIndexWriter(getIndexPath(), false, ANALYZER);
 
-                try
-                {
+                try {
 
                     final IndexReader reader = LuceneUtils.getIndexReader(getIndexPath());
 
-                    try
-                    {
-                        for (Iterator iterator = logEntries.iterator(); iterator.hasNext();)
-                        {
+                    try {
+                        for (Iterator iterator = logEntries.iterator(); iterator.hasNext();) {
                             HGLogEntry logEntry = (HGLogEntry) iterator.next();
-                            // TODO This call to isInteresting looks redundant
-                            if (isInteresting(logEntry))
-                            {
-                                if (!hasDocument(repoId, logEntry.getShortRevision(), reader))
-                                {
+                            // TODO This call to isInteresting looks redundantw
+                            if (isInteresting(logEntry)) {
+                                if (!hasDocument(repoId, logEntry.getShortRevision(), reader)) {
                                     Document doc = getDocument(repoId, logEntry);
-				    log.info("Indexing repository=" + repoId + ", revision: " + logEntry.getShortRevision());
+                                    log.info("Indexing repository=" + repoId + ", revision: " + logEntry.getShortRevision());
                                     writer.addDocument(doc);
                                 }
                             }
                         }
                     }
-                    finally
-                    {
+                    finally {
                         reader.close();
                     }
-		    // The original plugin only recorded the last revision
-		    // that contained an entry worth indexing. This leads to 
-		    // lots of repeated work.
-		    latestIndexedRevision = latestRevision;
-		    // update the in-memory cache SVN-71
-		    latestIndexedRevisionTbl.put(repoId, new Long(latestRevision));
-		    log.info("Finished indexing repository=" + repoId + ", latestIndexedRevision=" + latestIndexedRevision);
+                    // The original plugin only recorded the last revision
+                    // that contained an entry worth indexing. This leads to
+                    // lots of repeated work.
+                    latestIndexedRevision = latestRevision;
+                    // update the in-memory cache SVN-71
+                    latestIndexedRevisionTbl.put(repoId, new Long(latestRevision));
+                    log.info("Finished indexing repository=" + repoId + ", latestIndexedRevision=" + latestIndexedRevision);
                 }
-                finally
-                {
+                finally {
                     writer.close();
                 }
 
