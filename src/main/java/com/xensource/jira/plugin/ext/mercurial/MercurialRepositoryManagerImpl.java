@@ -179,7 +179,7 @@ public class MercurialRepositoryManagerImpl implements MercurialRepositoryManage
 			
 			String changesetFormat = rootStr + "?cs=${rev}";
 			String fileModifiedFormat = rootStr + "?fd=${rev};file=${path}";
-			ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, null, fileModifiedFormat, null, null, null);
+			ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, null, fileModifiedFormat, null, null, null, null);
 			
 			MercurialProperties prop = new MercurialProperties(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, updateRepo);
 			log.info("Added repository: " + prop);
@@ -219,7 +219,7 @@ public class MercurialRepositoryManagerImpl implements MercurialRepositoryManage
                 revisionCacheSize = new Integer(props.getProperty(MercurialRepositoryManager.PLUGIN_REVISION_CACHE_SIZE_KEY));
             }
             
-            ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, null, fileModifiedFormat, null, null, null);
+            ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, null, fileModifiedFormat, null, null, null, null);
             
             Boolean updateRepo = false;
             if (props.containsKey(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr))

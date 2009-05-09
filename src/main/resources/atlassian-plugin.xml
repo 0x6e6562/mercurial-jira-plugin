@@ -1,10 +1,14 @@
 <atlassian-plugin key="com.xensource.jira.plugin.ext.mercurial" name="Mercurial Plugin">
+
     <plugin-info>
         <description>JIRA Mercurial Plugin</description>
         <version>0.3.7.0.7</version>
         <application-version min="3.7" max="3.7"/>
         <vendor name="XenSource, Inc" url="http://www.xensource.com"/>
     </plugin-info>
+
+    <resource type="i18n" name="MercurialActionSupport"
+              location="com.xensource.jira.plugin.ext.mercurial.action.MercurialActionSupport" />
 
     <issue-tabpanel key="mercurial-commits-tabpanel" name="Mercurial Changes Tab Panel" class="com.xensource.jira.plugin.ext.mercurial.issuetabpanels.changes.MercurialRevisionsTabPanel">
         <resource type="i18n" name="i18n" location="templates.plugins.mercurial.issuetabpanels.mercurial_jira_plugin"/>
@@ -17,29 +21,29 @@
         <interface>com.xensource.jira.plugin.ext.mercurial.MercurialRepositoryManager</interface>
     </component>
 
-    <webwork1 key="SubversionRepositoriesManagement" name="Subversion repositories management" class="java.lang.Object">
+    <webwork1 key="MercurialRepositoriesManagement" name="Mercurial repositories management" class="java.lang.Object">
         <actions>
-            <action name="com.atlassian.jira.plugin.ext.subversion.action.ViewSubversionRepositoriesAction" alias="ViewSubversionRepositories">
-                <view name="success">/templates/plugins/subversion/configuration/list.vm</view>
+            <action name="com.atlassian.jira.plugin.ext.mercurial.action.ViewMercurialRepositoriesAction" alias="ViewMercurialRepositories">
+                <view name="success">/templates/plugins/mercurial/configuration/list.vm</view>
             </action>
-            <action name="com.atlassian.jira.plugin.ext.subversion.action.AddSubversionRepositoryAction" alias="AddSubversionRepository">
-                <view name="input">/templates/plugins/subversion/configuration/add.vm</view>
-                <view name="error">/templates/plugins/subversion/configuration/add.vm</view>
-                <view name="permissionviolation">/templates/plugins/subversion/configuration/no-privilege.vm</view>
+            <action name="com.atlassian.jira.plugin.ext.mercurial.action.AddMercurialRepositoryAction" alias="AddMercurialRepository">
+                <view name="input">/templates/plugins/mercurial/configuration/add.vm</view>
+                <view name="error">/templates/plugins/mercurial/configuration/add.vm</view>
+                <view name="permissionviolation">/templates/plugins/mercurial/configuration/no-privilege.vm</view>
             </action>
-            <action name="com.atlassian.jira.plugin.ext.subversion.action.UpdateSubversionRepositoryAction" alias="UpdateSubversionRepository">
-                <view name="input">/templates/plugins/subversion/configuration/edit.vm</view>
-                <view name="permissionviolation">/templates/plugins/subversion/configuration/no-privilege.vm</view>
-                <view name="error">/templates/plugins/subversion/configuration/edit.vm</view>
+            <action name="com.atlassian.jira.plugin.ext.mercurial.action.UpdateMercurialRepositoryAction" alias="UpdateMercurialRepository">
+                <view name="input">/templates/plugins/mercurial/configuration/edit.vm</view>
+                <view name="permissionviolation">/templates/plugins/mercurial/configuration/no-privilege.vm</view>
+                <view name="error">/templates/plugins/mercurial/configuration/edit.vm</view>
             </action>
-            <action name="com.atlassian.jira.plugin.ext.subversion.action.DeleteSubversionRepositoryAction" alias="DeleteSubversionRepository">
-				<view name="input">/templates/plugins/subversion/configuration/delete.vm</view>
-                <view name="permissionviolation">/templates/plugins/subversion/configuration/no-privilege.vm</view>
-				<view name="error">/templates/plugins/subversion/configuration/delete.vm</view>
+            <action name="com.atlassian.jira.plugin.ext.mercurial.action.DeleteMercurialRepositoryAction" alias="DeleteMercurialRepository">
+				<view name="input">/templates/plugins/mercurial/configuration/delete.vm</view>
+                <view name="permissionviolation">/templates/plugins/mercurial/configuration/no-privilege.vm</view>
+				<view name="error">/templates/plugins/mercurial/configuration/delete.vm</view>
             </action>
-            <action name="com.atlassian.jira.plugin.ext.subversion.action.ActivateSubversionRepositoryAction" alias="ActivateSubversionRepository">
-                <view name="permissionviolation">/templates/plugins/subversion/configuration/no-privilege.vm</view>
-                <view name="success">/templates/plugins/subversion/configuration/activate.vm</view>
+            <action name="com.atlassian.jira.plugin.ext.mercurial.action.ActivateMercurialRepositoryAction" alias="ActivateMercurialRepository">
+                <view name="permissionviolation">/templates/plugins/mercurial/configuration/no-privilege.vm</view>
+                <view name="success">/templates/plugins/mercurial/configuration/activate.vm</view>
             </action>
         </actions>
     </webwork1>
