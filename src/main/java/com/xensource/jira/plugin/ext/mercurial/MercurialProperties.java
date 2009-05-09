@@ -1,13 +1,7 @@
 package com.xensource.jira.plugin.ext.mercurial;
 
-/**
- * Created by IntelliJ IDEA.
- * User: detkin
- * Date: 27/05/2005
- * Time: 13:11:18
- * To change this template use File | Settings | File Templates.
- */
-public class MercurialProperties
+
+public class MercurialProperties implements HgProperties
 {
     public String root;
     public String displayName;
@@ -57,7 +51,7 @@ public class MercurialProperties
         }
         if (this.viewLinkFormat == null)
         {
-        	this.viewLinkFormat = new ViewLinkFormat(null, null, null, null, null, null);
+        	this.viewLinkFormat = new ViewLinkFormat(null, null, null, null, null, null, null);
         	this.viewLinkFormat.fillFormatFromOther(other.viewLinkFormat);
         }
         if (this.updateRepo == null)

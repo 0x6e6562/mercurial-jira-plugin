@@ -16,7 +16,17 @@ public class ViewLinkFormat
     public String fileReplacedFormat;
     public String fileDeletedFormat;
 
-    public ViewLinkFormat(String changesetFormat, String fileAddedFormat, String fileModifiedFormat, String fileReplacedFormat, String fileDeletedFormat, String pathLinkFormat)
+    // TODO Just added to make this compile
+    private String viewFormat;
+
+
+    public ViewLinkFormat(String changesetFormat,
+                          String fileAddedFormat,
+                          String fileModifiedFormat,
+                          String fileReplacedFormat,
+                          String fileDeletedFormat,
+                          String pathLinkFormat,
+                          String viewFormat)
     {
         this.copyFromFormat = pathLinkFormat;
         this.fileAddedFormat = fileAddedFormat;
@@ -24,6 +34,7 @@ public class ViewLinkFormat
         this.fileReplacedFormat = fileReplacedFormat;
         this.fileDeletedFormat = fileDeletedFormat;
         this.changesetFormat = changesetFormat;
+        this.viewFormat = viewFormat;
     }
 
 	public void fillFormatFromOther(ViewLinkFormat other)
@@ -44,4 +55,40 @@ public class ViewLinkFormat
 		return "changesetFormat: " + changesetFormat
 		    + " modifiedFormat: " + fileModifiedFormat;
 	}
+
+    public String getChangesetFormat() {
+        return changesetFormat;
+    }
+
+    public String getRevisionedPathLinkFormat() {
+        return revisionedPathLinkFormat;
+    }
+
+    public String getFileAddedFormat() {
+        return fileAddedFormat;
+    }
+
+    public String getRevisionedPathDelLinkFormat() {
+        return revisionedPathDelLinkFormat;
+    }
+
+    public String getCopyFromFormat() {
+        return copyFromFormat;
+    }
+
+    public String getFileModifiedFormat() {
+        return fileModifiedFormat;
+    }
+
+    public String getFileReplacedFormat() {
+        return fileReplacedFormat;
+    }
+
+    public String getFileDeletedFormat() {
+        return fileDeletedFormat;
+    }
+
+    public String getViewFormat() {
+        return viewFormat;
+    }
 }
