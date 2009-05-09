@@ -3,7 +3,7 @@ package com.xensource.jira.plugin.ext.mercurial.action;
 import com.opensymphony.util.TextUtils;
 import com.xensource.jira.plugin.ext.mercurial.*;
 
-public class AddMercurialRepositoryAction extends MercurialActionSupport implements HgProperties {
+public class AddMercurialRepositoryAction extends MercurialActionSupport implements DVCSProperties {
 
     private String root;
 	private String displayName;
@@ -36,11 +36,25 @@ public class AddMercurialRepositoryAction extends MercurialActionSupport impleme
 		validateRepositoryParameters();
 	}
 
+    // TODO Why does this class have to implement DVCSProperties ???
+
 	public String getRoot() {
 		return root;
 	}
 
-	public void setRoot(String root) {
+    public String getWebLink() {
+        return webLinkType;
+    }
+
+    public ViewLinkFormat getViewLinkFormat() {
+        return null;
+    }
+
+    public String getId() {
+        return "1";
+    }
+
+    public void setRoot(String root) {
 		this.root = root != null ? root.trim() : root;
 	}
 

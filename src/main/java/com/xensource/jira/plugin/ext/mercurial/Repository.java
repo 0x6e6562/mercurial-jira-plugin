@@ -4,7 +4,7 @@ package com.xensource.jira.plugin.ext.mercurial;
 /**
  * This is the metadata for a repo.
  */
-public class Repository implements HgProperties {
+public class Repository implements DVCSProperties {
 
 
 
@@ -64,5 +64,21 @@ public class Repository implements HgProperties {
 
     public String toString() {
         return "root " + root + " displayName " + displayName + " revisioningIndex: " + revisionIndexing + " revisioningCacheSize: " + revisioningCacheSize + " cloneDir: " + cloneDir;
+    }
+
+    public String getRoot() {
+        return root;
+    }
+
+    public String getWebLink() {
+        return viewCvsUrl;
+    }
+
+    public ViewLinkFormat getViewLinkFormat() {
+        return viewLinkFormat;
+    }
+
+    public String getId() {
+        return "1";
     }
 }

@@ -42,23 +42,22 @@
               </td>
             </tr>
 
-            #foreach ($repo in $action.getRepositories())
+            #foreach ($mercurialManager in $action.getRepositories())
             #if ($velocityCount % 2 == 1)
               #set ($rowbgcolor = "ffffff")
             #else
               #set ($rowbgcolor = "fffff0")
             #end
+            <!-- THIS IS A HORRIBLE HACK -->
+            #set ($repo = $mercurialManager.getRepository())
             <tr bgcolor="$rowbgcolor">
 
                 <td valign=top>
-                    <b>$repo.getDisplayName()</b>
+                    <b>$mercurialManager.getDisplayName()</b>
                 </td>
                 <td valign=top>
                     <b>$action.getText("mercurial.repository.root")</b>: $repo.getRoot()<br>
-                    <b>$action.getText("mercurial.repository.status")</b>: #if ($repo.isActive()) $action.getText("admin.common.words.active") #else $action.getText("admin.common.words.inactive") ($repo.getInactiveMessage()) #end<br>
-                    #if ($repo.isWebLinking())
-                      <br><b>$action.getText("admin.cvsmodules.viewcvs.root.param")</b>: $repo.getWebLink()
-                    #end
+                    
                     #if ($repo.getViewLinkFormat())
                       #if ($repo.getViewLinkFormat().getCopyFromFormat())
                       <br><b>$action.getText("mercurial.linkformat.path")</b>: $repo.getViewLinkFormat().getCopyFromFormat()

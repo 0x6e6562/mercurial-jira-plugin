@@ -14,6 +14,8 @@ package com.xensource.hg.core.io;
 
 import com.xensource.hg.util.ExecUtil;
 import com.xensource.hg.util.TimeUtil;
+import com.xensource.jira.plugin.ext.mercurial.DVCSProperties;
+import com.xensource.jira.plugin.ext.mercurial.ViewLinkFormat;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -26,7 +28,7 @@ import java.util.Map;
 /**
  * @author Matthew Doar
  */
-public class HGRepository {
+public class HGRepository implements DVCSProperties {
 
     private String myRepositoryUUID = "not set";
     private String myRepositoryRoot = "not set";
@@ -301,4 +303,21 @@ public class HGRepository {
         log.info("End of test, found " + count + " changesets");
     }
 
+    public String getRoot() {
+        return myRepositoryRoot;
+    }
+
+    public String getWebLink() {
+        log.fatal("Don't really know why this class implements this interface");
+        return null;
+    }
+
+    public ViewLinkFormat getViewLinkFormat() {
+        log.fatal("Don't really know why this class implements this interface");
+        return null;
+    }
+
+    public String getId() {
+        return myRepositoryUUID;
+    }
 }

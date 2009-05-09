@@ -15,9 +15,7 @@ public class ViewMercurialRepositoriesAction extends MercurialActionSupport
         super (manager);
     }
 
-    public Collection getRepositories()
-    {
-        //return getMercurialManager().getRepositoryList();
-        return null;
+    public Collection getRepositories() {
+        return repoManager.getRepositoryList();
     }
 }
