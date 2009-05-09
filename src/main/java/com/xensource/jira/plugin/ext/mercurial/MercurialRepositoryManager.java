@@ -23,6 +23,8 @@ public interface MercurialRepositoryManager extends Startable
     public static final String PLUGIN_REPODIR_KEY = "hg.repodir";
     public static final String PLUGIN_ROOTURL_KEY = "hg.repodir.url";
 
+    public static final String PLUGIN_HG_EXECUTABLE = "hg.executable";
+
     boolean isIndexingRevisions();
 
     RevisionIndexer getRevisionIndexer();
