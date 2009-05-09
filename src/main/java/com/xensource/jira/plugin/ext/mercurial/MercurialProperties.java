@@ -1,6 +1,7 @@
 package com.xensource.jira.plugin.ext.mercurial;
 
 
+
 public class MercurialProperties implements HgProperties
 {
     public String root;
@@ -13,9 +14,9 @@ public class MercurialProperties implements HgProperties
     public Integer revisioningCacheSize;
     public String cloneDir;
     public Boolean updateRepo;
+    public String executable;
 
-    public MercurialProperties(String root, String displayName, String username, String password, ViewLinkFormat viewLinkFormat, Boolean revisionIndexing, Integer revisioningCacheSize, String cloneDir, Boolean updateRepo)
-    {
+    public MercurialProperties(String root, String displayName, String username, String password, ViewLinkFormat viewLinkFormat, Boolean revisionIndexing, Integer revisioningCacheSize, String cloneDir, Boolean updateRepo, String executable) {
         this.root = root;
         this.displayName = displayName;
         this.username = username;
@@ -23,30 +24,25 @@ public class MercurialProperties implements HgProperties
         this.viewLinkFormat = viewLinkFormat;
         this.revisionIndexing = revisionIndexing;
         this.revisioningCacheSize = revisioningCacheSize;
-	this.cloneDir = cloneDir;
-	this.updateRepo = updateRepo;
+        this.cloneDir = cloneDir;
+        this.updateRepo = updateRepo;
+        this.executable = executable;
     }
 
-    public void fillPropertiesFromOther(MercurialProperties other)
-    {
-        if (this.username == null)
-        {
+    public void fillPropertiesFromOther(MercurialProperties other) {
+        if (this.username == null) {
             this.username = other.username;
         }
-        if (this.password == null)
-        {
+        if (this.password == null) {
             this.password = other.password;
         }
-        if (this.revisionIndexing == null)
-        {
+        if (this.revisionIndexing == null) {
             this.revisionIndexing = other.revisionIndexing;
         }
-        if (this.revisioningCacheSize == null)
-        {
+        if (this.revisioningCacheSize == null) {
             this.revisioningCacheSize = other.revisioningCacheSize;
         }
-        if (this.cloneDir == null)
-        {
+        if (this.cloneDir == null) {
             this.cloneDir = other.cloneDir;
         }
         if (this.viewLinkFormat == null)
@@ -54,14 +50,12 @@ public class MercurialProperties implements HgProperties
         	this.viewLinkFormat = new ViewLinkFormat(null, null, null, null, null, null, null);
         	this.viewLinkFormat.fillFormatFromOther(other.viewLinkFormat);
         }
-        if (this.updateRepo == null)
-        {
+        if (this.updateRepo == null) {
             this.updateRepo = other.updateRepo;
         }
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "root " + root + " displayName " + displayName + " revisioningIndex: " + revisionIndexing + " revisioningCacheSize: " + revisioningCacheSize + " cloneDir: " + cloneDir + " updateRepo " + updateRepo;
     }
 }

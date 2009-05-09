@@ -181,7 +181,7 @@ public class MercurialRepositoryManagerImpl implements MercurialRepositoryManage
 			String fileModifiedFormat = rootStr + "?fd=${rev};file=${path}";
 			ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, null, fileModifiedFormat, null, null, null, null);
 			
-			MercurialProperties prop = new MercurialProperties(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, updateRepo);
+			MercurialProperties prop = new MercurialProperties(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, updateRepo, getExecutable(props));
 			log.info("Added repository: " + prop);
 			propertyList.add(prop);
 		    }
@@ -227,7 +227,8 @@ public class MercurialRepositoryManagerImpl implements MercurialRepositoryManage
                 updateRepo = new Boolean("true".equalsIgnoreCase(props.getProperty(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr)));
             }
 
-            MercurialProperties prop =  new MercurialProperties(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, updateRepo);
+            MercurialProperties prop =  new MercurialProperties(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, updateRepo, getExecutable(props));
+
             log.debug("XXX: Added repository: " + prop);
             return prop;
         }
@@ -236,6 +237,15 @@ public class MercurialRepositoryManagerImpl implements MercurialRepositoryManage
             log.debug("As expected, no " + MercurialRepositoryManager.PLUGIN_ROOT_KEY + indexStr + " specified in mercurial-jira-plugin.properties");
             return null;
         }
+    }
+
+    private String getExecutable(Properties props) {
+        String executable = "/usr/bin/hg";
+        if (props.containsKey(MercurialRepositoryManager.PLUGIN_HG_EXECUTABLE))
+        {
+            executable = props.getProperty(MercurialRepositoryManager.PLUGIN_HG_EXECUTABLE);
+        }
+        return executable;
     }
 
     public void start() throws Exception
