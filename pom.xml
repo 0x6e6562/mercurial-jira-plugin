@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.atlassian.jira.plugins</groupId>
         <artifactId>jira-plugin-base</artifactId>
-        <version>12</version>
+        <version>15</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -22,11 +22,11 @@
         <atlassian.plugin.key>com.xensource.jira.plugin.ext.mercurial.mercurial-jira-plugin</atlassian.plugin.key>
 
         <!-- JIRA version -->
-        <atlassian.product.version>3.13</atlassian.product.version>
+        <atlassian.product.version>3.13.4</atlassian.product.version>
         <!-- JIRA functional test library version -->
-        <atlassian.product.test-lib.version>3.13</atlassian.product.test-lib.version>
+        <atlassian.product.test-lib.version>3.13.4</atlassian.product.test-lib.version>
         <!-- JIRA data version -->
-        <atlassian.product.data.version>3.13</atlassian.product.data.version>
+        <atlassian.product.data.version>3.13.4</atlassian.product.data.version>
     </properties>
 
     <description>JIRA plugin for the Mercurial distributed version control system</description>
