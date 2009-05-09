@@ -1,39 +1,39 @@
-#controlHeader($action 'displayName' $action.getText("subversion.repository.display.name") true $displayParameters.noHeader)
+#controlHeader($action 'displayName' $action.getText("mercurial.repository.display.name") true $displayParameters.noHeader)
 <input type="text" id="displayName" name="displayName" #if ($displayName) value="$displayName" #end />
 #controlFooter($action "" $displayParameter.noHeader)
 
 <tr>
-  <td colspan=2 bgcolor=f0f0f0><b>$action.getText("subversion.repository.details")</b></td>
+  <td colspan=2 bgcolor=f0f0f0><b>$action.getText("mercurial.repository.details")</b></td>
 </tr>
 
-#controlHeader($action 'root' $action.getText("subversion.repository.root") true $displayParameters.noHeader)
+#controlHeader($action 'root' $action.getText("mercurial.repository.root") true $displayParameters.noHeader)
 <input type="text" id="root" name="root" #if ($root) value="$root" #end size="60" />
-#controlFooter($action $action.getText("subversion.repository.root.description") $displayParameter.noHeader)
+#controlFooter($action $action.getText("mercurial.repository.root.description") $displayParameter.noHeader)
 
-#controlHeader($action 'revisionIndexing' $action.getText("subversion.repository.revision.indexing") true $displayParameters.noHeader)
-<input id="revisionIndexingTrue" type="radio" value="true" name="revisionIndexing" #if ($revisionIndexing) checked="checked" #end><label for="revisionIndexingTrue">$action.getText("subversion.repository.revision.indexing.enabled")</label>
+#controlHeader($action 'revisionIndexing' $action.getText("mercurial.repository.revision.indexing") true $displayParameters.noHeader)
+<input id="revisionIndexingTrue" type="radio" value="true" name="revisionIndexing" #if ($revisionIndexing) checked="checked" #end><label for="revisionIndexingTrue">$action.getText("mercurial.repository.revision.indexing.enabled")</label>
 &nbsp;
-<input id="revisionIndexingFalse" type="radio" value="false" name="revisionIndexing" #if (!$revisionIndexing) checked="checked" #end><label for="revisionIndexingFalse">$action.getText("subversion.repository.revision.indexing.disabled")</label>
+<input id="revisionIndexingFalse" type="radio" value="false" name="revisionIndexing" #if (!$revisionIndexing) checked="checked" #end><label for="revisionIndexingFalse">$action.getText("mercurial.repository.revision.indexing.disabled")</label>
 #controlFooter($action '' $displayParameter.noHeader)
 
-#controlHeader($action 'revisionCacheSize' $action.getText("subversion.repository.revision.cache.size") true $displayParameters.noHeader)
+#controlHeader($action 'revisionCacheSize' $action.getText("mercurial.repository.revision.cache.size") true $displayParameters.noHeader)
 <input type="text" id="revisionCacheSize" name="revisionCacheSize" #if ($revisionCacheSize) value="$revisionCacheSize" #end />
-#controlFooter($action $action.getText("subversion.repository.revision.cache.size.description") $displayParameters.noHeader)
+#controlFooter($action $action.getText("mercurial.repository.revision.cache.size.description") $displayParameters.noHeader)
 
-#controlHeader($action 'username' $action.getText("subversion.repository.username") false $displayParameters.noHeader)
+#controlHeader($action 'username' $action.getText("mercurial.repository.username") false $displayParameters.noHeader)
 <input type="text" id="username" name="username" #if ($username) value="$username" #end />
 #controlFooter($action '' $displayParameters.noHeader)
 
-#controlHeader($action 'password' $action.getText("subversion.repository.password") false $displayParameters.noHeader)
+#controlHeader($action 'password' $action.getText("mercurial.repository.password") false $displayParameters.noHeader)
 <input type="password" id="password" name="password" #if ($password) value="$password" #end />
 #controlFooter($action '' $displayParameters.noHeader)
 
-#controlHeader($action 'privateKeyFile' $action.getText("subversion.repository.private.key.file") false $displayParameters.noHeader)
+#controlHeader($action 'privateKeyFile' $action.getText("mercurial.repository.private.key.file") false $displayParameters.noHeader)
 <input type="text" id="privateKeyFile" name="privateKeyFile" #if ($privateKeyFile) value="$privateKeyFile" #end size="60" />
-#controlFooter($action $action.getText("subversion.repository.private.key.file.description") $displayParameters.noHeader)
+#controlFooter($action $action.getText("mercurial.repository.private.key.file.description") $displayParameters.noHeader)
 
 <tr>
-    <td colspan=2 bgcolor=f0f0f0><b>$action.getText("subversion.repository.web.linking")</b></td>
+    <td colspan=2 bgcolor=f0f0f0><b>$action.getText("mercurial.repository.web.linking")</b></td>
 </tr>
 
 <script language="JavaScript" type="text/javascript">
@@ -82,35 +82,35 @@
     }
 </script>
 
-#controlHeader($action 'webLinkType' $action.getText("subversion.repository.web.link.type") false $displayParameters.noHeader)
+#controlHeader($action 'webLinkType' $action.getText("mercurial.repository.web.link.type") false $displayParameters.noHeader)
 <select id="webLinkType" name="webLinkType" onchange="handleWebLinkTypeChanged()">
     <option></option>
     #foreach ($currentType in $webLinkTypes)
         <option value="$currentType.key" #if ( $webLinkType && $webLinkType == $currentType.key ) selected="selected" #end>$currentType.name</option>
     #end
 </select>
-#controlFooter($action $action.getText("subversion.repository.web.link.type.description") $displayParameters.noHeader)
+#controlFooter($action $action.getText("mercurial.repository.web.link.type.description") $displayParameters.noHeader)
 
-#controlHeader($action 'viewFormat' $action.getText("subversion.repository.view.format") false $displayParameters.noHeader)
+#controlHeader($action 'viewFormat' $action.getText("mercurial.repository.view.format") false $displayParameters.noHeader)
 <input type="text" id="viewFormat" name="viewFormat" #if ($viewFormat) value="$viewFormat" #end  size="60"/>
 #controlFooter($action '' $displayParameters.noHeader)
 
-#controlHeader($action 'changesetFormat' $action.getText("subversion.repository.changeset.format") false $displayParameters.noHeader)
+#controlHeader($action 'changesetFormat' $action.getText("mercurial.repository.changeset.format") false $displayParameters.noHeader)
 <input type="text" id="changesetFormat" name="changesetFormat" #if ($changesetFormat) value="$changesetFormat" #end  size="60"/>
 #controlFooter($action '' $displayParameters.noHeader)
 
-#controlHeader($action 'fileAddedFormat' $action.getText("subversion.repository.file.added.format") false $displayParameters.noHeader)
+#controlHeader($action 'fileAddedFormat' $action.getText("mercurial.repository.file.added.format") false $displayParameters.noHeader)
 <input type="text" id="fileAddedFormat" name="fileAddedFormat" #if ($fileAddedFormat) value="$fileAddedFormat" #end  size="60"/>
 #controlFooter($action '' $displayParameters.noHeader)
 
-#controlHeader($action 'fileModifiedFormat' $action.getText("subversion.repository.file.modified.format") false $displayParameters.noHeader)
+#controlHeader($action 'fileModifiedFormat' $action.getText("mercurial.repository.file.modified.format") false $displayParameters.noHeader)
 <input type="text" id="fileModifiedFormat" name="fileModifiedFormat" #if ($fileModifiedFormat) value="$fileModifiedFormat" #end  size="60"/>
 #controlFooter($action '' $displayParameters.noHeader)
 
-#controlHeader($action 'fileReplacedFormat' $action.getText("subversion.repository.file.replaced.format") false $displayParameters.noHeader)
+#controlHeader($action 'fileReplacedFormat' $action.getText("mercurial.repository.file.replaced.format") false $displayParameters.noHeader)
 <input type="text" id="fileReplacedFormat" name="fileReplacedFormat" #if ($fileReplacedFormat) value="$fileReplacedFormat" #end  size="60"/>
 #controlFooter($action '' $displayParameters.noHeader)
 
-#controlHeader($action 'fileDeletedFormat' $action.getText("subversion.repository.file.deleted.format") false $displayParameters.noHeader)
+#controlHeader($action 'fileDeletedFormat' $action.getText("mercurial.repository.file.deleted.format") false $displayParameters.noHeader)
 <input type="text" id="fileDeletedFormat" name="fileDeletedFormat" #if ($fileDeletedFormat) value="$fileDeletedFormat" #end  size="60"/>
 #controlFooter($action '' $displayParameters.noHeader)

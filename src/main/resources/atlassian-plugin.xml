@@ -21,27 +21,35 @@
         <interface>com.xensource.jira.plugin.ext.mercurial.MercurialRepositoryManager</interface>
     </component>
 
+    <web-item key="mercurial-repositories-link" name="Mercurial repositories link on administrators page" section="system.admin/globalsettings" weight="95">
+        <label key="Hg Repositories" />
+        <condition class="com.atlassian.jira.plugin.webfragment.conditions.JiraGlobalPermissionCondition">
+            <param name="permission">admin</param>
+        </condition>
+        <link linkId="mercurial-repositories">/secure/ViewMercurialRepositories.jspa</link>
+    </web-item>
+
     <webwork1 key="MercurialRepositoriesManagement" name="Mercurial repositories management" class="java.lang.Object">
         <actions>
-            <action name="com.atlassian.jira.plugin.ext.mercurial.action.ViewMercurialRepositoriesAction" alias="ViewMercurialRepositories">
+            <action name="com.xensource.jira.plugin.ext.mercurial.action.ViewMercurialRepositoriesAction" alias="ViewMercurialRepositories">
                 <view name="success">/templates/plugins/mercurial/configuration/list.vm</view>
             </action>
-            <action name="com.atlassian.jira.plugin.ext.mercurial.action.AddMercurialRepositoryAction" alias="AddMercurialRepository">
+            <action name="com.xensource.jira.plugin.ext.mercurial.action.AddMercurialRepositoryAction" alias="AddMercurialRepository">
                 <view name="input">/templates/plugins/mercurial/configuration/add.vm</view>
                 <view name="error">/templates/plugins/mercurial/configuration/add.vm</view>
                 <view name="permissionviolation">/templates/plugins/mercurial/configuration/no-privilege.vm</view>
             </action>
-            <action name="com.atlassian.jira.plugin.ext.mercurial.action.UpdateMercurialRepositoryAction" alias="UpdateMercurialRepository">
+            <action name="com.xensource.jira.plugin.ext.mercurial.action.UpdateMercurialRepositoryAction" alias="UpdateMercurialRepository">
                 <view name="input">/templates/plugins/mercurial/configuration/edit.vm</view>
                 <view name="permissionviolation">/templates/plugins/mercurial/configuration/no-privilege.vm</view>
                 <view name="error">/templates/plugins/mercurial/configuration/edit.vm</view>
             </action>
-            <action name="com.atlassian.jira.plugin.ext.mercurial.action.DeleteMercurialRepositoryAction" alias="DeleteMercurialRepository">
+            <action name="com.xensource.jira.plugin.ext.mercurial.action.DeleteMercurialRepositoryAction" alias="DeleteMercurialRepository">
 				<view name="input">/templates/plugins/mercurial/configuration/delete.vm</view>
                 <view name="permissionviolation">/templates/plugins/mercurial/configuration/no-privilege.vm</view>
 				<view name="error">/templates/plugins/mercurial/configuration/delete.vm</view>
             </action>
-            <action name="com.atlassian.jira.plugin.ext.mercurial.action.ActivateMercurialRepositoryAction" alias="ActivateMercurialRepository">
+            <action name="com.xensource.jira.plugin.ext.mercurial.action.ActivateMercurialRepositoryAction" alias="ActivateMercurialRepository">
                 <view name="permissionviolation">/templates/plugins/mercurial/configuration/no-privilege.vm</view>
                 <view name="success">/templates/plugins/mercurial/configuration/activate.vm</view>
             </action>

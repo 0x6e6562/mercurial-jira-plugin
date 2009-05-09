@@ -1,10 +1,10 @@
 <html>
   <head>
-    <title>$action.getText("subversion.repository.activate")</title>
+    <title>$action.getText("mercurial.repository.activate")</title>
     <meta name="decorator" content="admin" />
   </head>
   <body>
-			<form onsubmit="if (this.submitted) return false; this.submitted = true; return true" name="jiraform" action="ViewSubversionRepositories.jspa"/>
+			<form onsubmit="if (this.submitted) return false; this.submitted = true; return true" name="jiraform" action="ViewMercurialRepositories.jspa"/>
 				<table width=100% cellpadding=10 cellspacing=0 border=0>
 					<tr>
 						<td>
@@ -12,12 +12,12 @@
 								 <tbody>
 									 <tr>
 										 <td class="jiraformheader">
-											 <h3 class="formtitle">$action.getText("subversion.repository.activate")</h3>
+											 <h3 class="formtitle">$action.getText("mercurial.repository.activate")</h3>
 										 </td>
 									 </tr>
 									 <tr>
 											<td class="jiraformheader">
-												$action.getText("subversion.repository.activate.description")
+												$action.getText("mercurial.repository.activate.description")
 											</td>
 									 </tr>
 									 #if ($action.hasAnyErrors())
@@ -33,7 +33,7 @@
 										 #end
 									 #else
 										 <tr>
-											 <td bgcolor=ffffff>$action.getText("subversion.repository.activation.successful")</td>
+											 <td bgcolor=ffffff>$action.getText("mercurial.repository.activation.successful")</td>
 										 </tr>
 									 #end
 									 </tr>

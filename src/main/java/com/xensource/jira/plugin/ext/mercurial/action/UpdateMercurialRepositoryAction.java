@@ -20,14 +20,14 @@ public class UpdateMercurialRepositoryAction extends AddMercurialRepositoryActio
 
 
         if (repoId == -1) {
-			addErrorMessage(getText("subversion.repository.id.missing"));
+			addErrorMessage(getText("mercurial.repository.id.missing"));
 			return ERROR;
 		}
 
 		// Retrieve the cvs repository
-//		final SubversionManager repository = getMultipleRepoManager().getRepository(repoId);
+//		final MercurialManager repository = getMultipleRepoManager().getRepository(repoId);
 //		if (repository == null) {
-//			addErrorMessage(getText("subversion.repository.does.not.exist", Long.toString(repoId)));
+//			addErrorMessage(getText("mercurial.repository.does.not.exist", Long.toString(repoId)));
 //			return ERROR;
 //		}
 //
@@ -53,22 +53,22 @@ public class UpdateMercurialRepositoryAction extends AddMercurialRepositoryActio
 
 	public String doExecute() {
 		if (!hasPermissions()) {
-			addErrorMessage(getText("subversion.admin.privilege.required"));
+			addErrorMessage(getText("mercurial.admin.privilege.required"));
 			return ERROR;
 		}
 
 		if (repoId == -1) {
-			return getRedirect("ViewSubversionRepositories.jspa");
+			return getRedirect("ViewMercurialRepositories.jspa");
 		}
 
-//		SubversionManager subversionManager = getMultipleRepoManager().updateRepository(repoId, this);
-//		if (!subversionManager.isActive()) {
-//			repoId = subversionManager.getId();
-//			addErrorMessage(subversionManager.getInactiveMessage());
+//		MercurialManager mercurialManager = getMultipleRepoManager().updateRepository(repoId, this);
+//		if (!mercurialManager.isActive()) {
+//			repoId = mercurialManager.getId();
+//			addErrorMessage(mercurialManager.getInactiveMessage());
 //			addErrorMessage(getText("admin.errors.occured.when.updating"));
 //			return ERROR;
 //		}
-		return getRedirect("ViewSubversionRepositories.jspa");
+		return getRedirect("ViewMercurialRepositories.jspa");
 	}
 
 	public long getRepoId() {

@@ -59,7 +59,8 @@ public class HGRepository {
         myRepositoryRoot = location.toCanonicalForm();
         myRepositoryUUID = myRepositoryRoot;
         myCloneDir = cloneDir;
-        myUpdateRepo = updateRepo;
+        // TODO WTF is this updateRepo shit? Can't we just nuke it???
+        myUpdateRepo = (updateRepo == null) ? false : updateRepo;
         log.debug("mercurial repository object: " + myRepositoryRoot + ", cloneDir: " + cloneDir);
 
         HG_TIP = executable + " tip";

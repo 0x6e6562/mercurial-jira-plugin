@@ -28,7 +28,7 @@ public class ActivateMercurialRepositoryAction extends MercurialActionSupport {
 		mercurialManager = repoManager.getRepository(repoId + "");
 //		mercurialManager.activate();
 //		if (!mercurialManager.isActive()) {
-//			addErrorMessage(getText("subversion.repository.activation.failed", mercurialManager.getInactiveMessage()));
+//			addErrorMessage(getText("mercurial.repository.activation.failed", mercurialManager.getInactiveMessage()));
 //		}
 		return SUCCESS;
 	}

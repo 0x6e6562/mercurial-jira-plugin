@@ -15,54 +15,41 @@ import java.io.File;
  * This is a wrapper class for many MercurialManagers.
  * Configured via mercurial-jira-plugin.properties.
  *
- * @see MercurialManager
  * @author Dylan Etkin
+ * @see MercurialManager
  */
-public class MercurialRepositoryManagerImpl implements MercurialRepositoryManager
-{
+public class MercurialRepositoryManagerImpl implements MercurialRepositoryManager {
     private static Logger log = Logger.getLogger(MercurialRepositoryManagerImpl.class);
 
     private Map repositoryMap;
     private RevisionIndexer revisionIndexer;
 
-    public MercurialRepositoryManagerImpl(ApplicationProperties applicationProperties, VersionManager versionManager)
-    {
+    public MercurialRepositoryManagerImpl(ApplicationProperties applicationProperties, VersionManager versionManager) {
         setupEnvironment(applicationProperties, versionManager);
     }
 
-    private void setupEnvironment(ApplicationProperties applicationProperties, VersionManager versionManager)
-    {
+    private void setupEnvironment(ApplicationProperties applicationProperties, VersionManager versionManager) {
         Properties props = new Properties(System.getProperties());
         repositoryMap = new HashMap();
 
-        try
-        {
+        try {
             // First, try loading from the properties file.
             props.load(ClassLoaderUtils.getResourceAsStream("mercurial-jira-plugin.properties", MercurialRepositoryManagerImpl.class));
 
             List properties = getPluginProperties(props);
 
             boolean anyRevisionIndexing = false;
-            for (Iterator it = properties.iterator(); it.hasNext();)
-            {
-                MercurialProperties property = (MercurialProperties) it.next();
-                try
-                {
-                    MercurialManager mercurialInstance = new MercurialManagerImpl(applicationProperties, property);
-		    if (mercurialInstance == null) {
-			log.error("Failed to construct a MercurialManager for the repository:" + property);
-		    }
-                    repositoryMap.put(mercurialInstance.getRepository().getRepositoryUUID(), mercurialInstance);
-
+            for (Iterator it = properties.iterator(); it.hasNext();) {
+                Repository property = (Repository) it.next();
+                try {
+                    registerRepository(property);
                     // Now setup revision indexing if they want it
-                    if (property.revisionIndexing != null && property.revisionIndexing.booleanValue())
-                    {
+                    if (property.revisionIndexing != null && property.revisionIndexing.booleanValue()) {
                         anyRevisionIndexing = true;
                     }
                 }
-                catch (InfrastructureException inf)
-                {
-		    log.error("Error initializing a repository: " +  inf);
+                catch (InfrastructureException inf) {
+                    log.error("Error initializing a repository: " + inf);
                 }
 
             }
@@ -70,67 +57,70 @@ public class MercurialRepositoryManagerImpl implements MercurialRepositoryManage
             if (!anyRevisionIndexing) // they might have removed the property - let's check there is no service anyway
             {
                 RevisionIndexService.remove();
-            }
-            else
-            {
+            } else {
                 // create revision indexer once we know we have succeed initializing our repositories
                 revisionIndexer = new RevisionIndexer(this, applicationProperties, versionManager);
             }
         }
-        catch (Throwable t)
-        {
+        catch (Throwable t) {
             t.printStackTrace();
             log.error("Could not load properties from mercurial-jira-plugin.properties", t);
             throw new InfrastructureException("Could not load properties from mercurial-jira-plugin.properties", t);
         }
     }
 
-    public boolean isIndexingRevisions()
-    {
+    /**
+     * Internal utility method to register a repo with this manager
+     */
+    private MercurialManager registerRepository(Repository repository) {
+        MercurialManager mercurialInstance = new MercurialManagerImpl(repository);
+        repositoryMap.put(mercurialInstance.getRepository().getRepositoryUUID(), mercurialInstance);
+        return mercurialInstance;
+    }
+
+    public boolean isIndexingRevisions() {
         return revisionIndexer != null;
     }
 
-    public RevisionIndexer getRevisionIndexer()
-    {
+    public RevisionIndexer getRevisionIndexer() {
         return revisionIndexer;
     }
 
-    public Collection getRepositoryList()
-    {
+    public Collection getRepositoryList() {
         return repositoryMap.values();
     }
 
-    public MercurialManager getRepository(String repoUUID)
-    {
+    public MercurialManager getRepository(String repoUUID) {
         MercurialManager subManager = (MercurialManager) repositoryMap.get(repoUUID);
-        if (subManager != null)
-        {
+        if (subManager != null) {
             return subManager;
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
-    private List getPluginProperties(Properties allProps) throws InfrastructureException
-    {
+    /**
+     * This registers a repository with the central repository manager
+     */
+    public MercurialManager addRepository(Repository r) {
+        return registerRepository(r);
+    }
+
+    private List getPluginProperties(Properties allProps) throws InfrastructureException {
         List propertyList = new ArrayList();
-        MercurialProperties prop = null;
+        Repository prop = null;
         int i = 1;
-        do
-        {
+        do {
             prop = getPluginProperty(i, allProps);
             i++;
-            if (prop != null)
-            {
-		log.info("Added property: " + prop);
+            if (prop != null) {
+                log.info("Added property: " + prop);
                 propertyList.add(prop);
             }
         }
         while (prop != null);
 
-	propertyList = getRepoDirs(propertyList, allProps);
+        propertyList = getRepoDirs(propertyList, allProps);
 
         return propertyList;
     }
@@ -138,120 +128,109 @@ public class MercurialRepositoryManagerImpl implements MercurialRepositoryManage
     /**
      * Add all the repositories in the named directories.
      */
-    private List getRepoDirs(List propertyList, Properties props)
-    {
+    private List getRepoDirs(List propertyList, Properties props) {
         int i = 1;
-        do
-        {
-	    String indexStr = "." + Integer.toString(i);
-	    i++;
-	    if (props.containsKey(MercurialRepositoryManager.PLUGIN_REPODIR_KEY + indexStr))
-	    {
-		String repoDir = props.getProperty(MercurialRepositoryManager.PLUGIN_REPODIR_KEY + indexStr);
-		String rootUrl = props.getProperty(MercurialRepositoryManager.PLUGIN_ROOTURL_KEY + indexStr);
-		Boolean updateRepo = false;
-		if (props.containsKey(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr))
-		{
-		    updateRepo = new Boolean("true".equalsIgnoreCase(props.getProperty(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr)));
-		}
-		log.debug("Scanning " + repoDir + " for hg repositories");
+        do {
+            String indexStr = "." + Integer.toString(i);
+            i++;
+            if (props.containsKey(MercurialRepositoryManager.PLUGIN_REPODIR_KEY + indexStr)) {
+                String repoDir = props.getProperty(MercurialRepositoryManager.PLUGIN_REPODIR_KEY + indexStr);
+                String rootUrl = props.getProperty(MercurialRepositoryManager.PLUGIN_ROOTURL_KEY + indexStr);
+                Boolean updateRepo = false;
+                if (props.containsKey(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr)) {
+                    updateRepo = new Boolean("true".equalsIgnoreCase(props.getProperty(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr)));
+                }
+                log.debug("Scanning " + repoDir + " for hg repositories");
 
-		// Find all the repositories in the given repodir
-		File dir = new File(repoDir);
-		String[] repositories = dir.list();
-		if (repositories == null) {
-		    log.error("Either " + repoDir + " does not exist or is not a directory");
-		    continue;
-		} else {
-		    for (int j=0; j < repositories.length; j++) {
-			String repoName = repositories[j];
-			// TODO reject files that aren't repositories
-			String rootStr = rootUrl + "/" + repoName;
-			String displayName = repoName;
-			// Make the displayed name more informational
-			int lastIndex = repoDir.lastIndexOf('/');
-			if (lastIndex != -1) {
-			    displayName = repoDir.substring(lastIndex+1, repoDir.length()) + "/" + displayName;
-			}
-			Boolean revisionIndexing = new Boolean("true");
-			Integer revisionCacheSize = 10000;
-			String cloneDir = repoDir;
-			
-			String changesetFormat = rootStr + "?cs=${rev}";
-			String fileModifiedFormat = rootStr + "?fd=${rev};file=${path}";
-			ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, null, fileModifiedFormat, null, null, null, null);
-			
-			MercurialProperties prop = new MercurialProperties(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, updateRepo, getExecutable(props));
-			log.info("Added repository: " + prop);
-			propertyList.add(prop);
-		    }
-		}
-	    } else {
-		break;
-	    }
+                // Find all the repositories in the given repodir
+                File dir = new File(repoDir);
+                String[] repositories = dir.list();
+                if (repositories == null) {
+                    log.error("Either " + repoDir + " does not exist or is not a directory");
+                    continue;
+                } else {
+                    for (int j = 0; j < repositories.length; j++) {
+                        String repoName = repositories[j];
+                        // TODO reject files that aren't repositories
+                        String rootStr = rootUrl + "/" + repoName;
+                        String displayName = repoName;
+                        // Make the displayed name more informational
+                        int lastIndex = repoDir.lastIndexOf('/');
+                        if (lastIndex != -1) {
+                            displayName = repoDir.substring(lastIndex + 1, repoDir.length()) + "/" + displayName;
+                        }
+                        Boolean revisionIndexing = new Boolean("true");
+                        Integer revisionCacheSize = 10000;
+                        String cloneDir = repoDir;
+
+                        String changesetFormat = rootStr + "?cs=${rev}";
+                        String fileModifiedFormat = rootStr + "?fd=${rev};file=${path}";
+                        ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, null, fileModifiedFormat, null, null, null, null);
+
+                        Repository prop = new Repository(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, getExecutable(props));
+                        log.info("Added repository: " + prop);
+                        propertyList.add(prop);
+                    }
+                }
+            } else {
+                break;
+            }
         }
         while (true);
 
-	return propertyList;
+        return propertyList;
     }
 
-    private MercurialProperties getPluginProperty(int index, Properties props)
-    {
+    private Repository getPluginProperty(int index, Properties props) {
         String indexStr = "." + Integer.toString(index);
 
-        if (props.containsKey(MercurialRepositoryManager.PLUGIN_ROOT_KEY + indexStr))
-        {
+        if (props.containsKey(MercurialRepositoryManager.PLUGIN_ROOT_KEY + indexStr)) {
             String rootStr = props.getProperty(MercurialRepositoryManager.PLUGIN_ROOT_KEY + indexStr);
             String displayName = props.getProperty(MercurialRepositoryManager.PLUGIN_REPOSITORY_NAME + indexStr);
             String cloneDir = props.getProperty(MercurialRepositoryManager.PLUGIN_CLONEDIR_KEY + indexStr);
-            
+
             String changesetFormat = props.getProperty(MercurialRepositoryManager.PLUGIN_LINKFORMAT_CHANGESET + indexStr);
             String fileModifiedFormat = props.getProperty(MercurialRepositoryManager.PLUGIN_LINKFORMAT_FILE_MODIFIED + indexStr);
 
             Boolean revisionIndexing = null;
-            if (props.containsKey(MercurialRepositoryManager.PLUGIN_REVISION_INDEXING_KEY))
-            {
+            if (props.containsKey(MercurialRepositoryManager.PLUGIN_REVISION_INDEXING_KEY)) {
                 revisionIndexing = new Boolean("true".equalsIgnoreCase(props.getProperty(MercurialRepositoryManager.PLUGIN_REVISION_INDEXING_KEY)));
             }
             Integer revisionCacheSize = null;
-            if (props.containsKey(MercurialRepositoryManager.PLUGIN_REVISION_CACHE_SIZE_KEY))
-            {
+            if (props.containsKey(MercurialRepositoryManager.PLUGIN_REVISION_CACHE_SIZE_KEY)) {
                 revisionCacheSize = new Integer(props.getProperty(MercurialRepositoryManager.PLUGIN_REVISION_CACHE_SIZE_KEY));
             }
-            
+
             ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, null, fileModifiedFormat, null, null, null, null);
-            
+
             Boolean updateRepo = false;
-            if (props.containsKey(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr))
-            {
+            if (props.containsKey(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr)) {
                 updateRepo = new Boolean("true".equalsIgnoreCase(props.getProperty(MercurialRepositoryManager.PLUGIN_UPDATE_REPO_KEY + indexStr)));
             }
 
-            MercurialProperties prop =  new MercurialProperties(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, updateRepo, getExecutable(props));
+            Repository prop = new Repository(rootStr, displayName, null, null, viewLinkFormat, revisionIndexing, revisionCacheSize, cloneDir, getExecutable(props));
 
             log.debug("XXX: Added repository: " + prop);
             return prop;
-        }
-        else
-        {
+        } else {
             log.debug("As expected, no " + MercurialRepositoryManager.PLUGIN_ROOT_KEY + indexStr + " specified in mercurial-jira-plugin.properties");
             return null;
         }
     }
 
+    /**
+     * This returns a string that represents the full path to the VCS executable
+     */
     private String getExecutable(Properties props) {
         String executable = "/usr/bin/hg";
-        if (props.containsKey(MercurialRepositoryManager.PLUGIN_HG_EXECUTABLE))
-        {
+        if (props.containsKey(MercurialRepositoryManager.PLUGIN_HG_EXECUTABLE)) {
             executable = props.getProperty(MercurialRepositoryManager.PLUGIN_HG_EXECUTABLE);
         }
         return executable;
     }
 
-    public void start() throws Exception
-    {
-        if (isIndexingRevisions())
-        {
+    public void start() throws Exception {
+        if (isIndexingRevisions()) {
             getRevisionIndexer().start();
         }
     }

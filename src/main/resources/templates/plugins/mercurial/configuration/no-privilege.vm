@@ -3,7 +3,7 @@
  		<div class="errorArea">
 			<h4>Error</h4>
 			<ul>
-					<li>$action.getText("subversion.admin.privilege.required")</li>
+					<li>$action.getText("mercurial.admin.privilege.required")</li>
 			</ul>
     </div>
    </td>

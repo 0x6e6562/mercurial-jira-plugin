@@ -1,11 +1,11 @@
 package com.xensource.jira.plugin.ext.mercurial.action;
 
 import com.opensymphony.util.TextUtils;
-import com.xensource.jira.plugin.ext.mercurial.MercurialRepositoryManager;
-import com.xensource.jira.plugin.ext.mercurial.HgProperties;
+import com.xensource.jira.plugin.ext.mercurial.*;
 
 public class AddMercurialRepositoryAction extends MercurialActionSupport implements HgProperties {
-	private String root;
+
+    private String root;
 	private String displayName;
 	private String username;
 	private String password;
@@ -20,13 +20,17 @@ public class AddMercurialRepositoryAction extends MercurialActionSupport impleme
 	private String fileReplacedFormat;
 	private String fileDeletedFormat;
 
+    // TODO Don't know whether these guys should be global parameters or not
+    public String executable;
+    public String cloneDir;
+
 	public AddMercurialRepositoryAction(MercurialRepositoryManager manager) {
 		super(manager);
 	}
 
     public void doValidation() {
 		if (!TextUtils.stringSet(getDisplayName())) {
-			addError("dipalyName", getText("subversion.errors.you.must.specify.a.name.for.the.repository"));
+			addError("dipalyName", getText("mercurial.errors.you.must.specify.a.name.for.the.repository"));
 		}
 
 		validateRepositoryParameters();
@@ -181,26 +185,36 @@ public class AddMercurialRepositoryAction extends MercurialActionSupport impleme
 	}
 
 	public String doExecute() throws Exception {
-        if (!hasPermissions())
-        {
+        if (!hasPermissions()) {
             return PERMISSION_VIOLATION_RESULT;
         }
 
-//		SubversionManager subversionManager = getMultipleRepoManager().createRepository(this);
-//		if (!subversionManager.isActive()) {
-//			addErrorMessage(subversionManager.getInactiveMessage());
-//			addErrorMessage(getText("admin.errors.occured.when.creating"));
-//			getMultipleRepoManager().removeRepository(subversionManager.getId());
-//			return ERROR;
-//		}
+        ViewLinkFormat viewLinkFormat = new ViewLinkFormat(changesetFormat, fileAddedFormat,
+                fileModifiedFormat, fileReplacedFormat, fileDeletedFormat,
+                webLinkType, viewFormat);
 
-		return getRedirect("ViewSubversionRepositories.jspa");
+
+        Repository repo =  new Repository(root, displayName, username, password,
+                                          viewLinkFormat, revisionIndexing, revisionCacheSize,
+                                          cloneDir, executable);
+
+        MercurialManager manager = repoManager.addRepository(repo);
+
+        // TODO WTF kind of error handling is this???
+		if (manager == null) {
+			//addErrorMessage(mercurialManager.getInactiveMessage());
+			addErrorMessage(getText("admin.errors.occured.when.creating"));
+			//getMultipleRepoManager().removeRepository(mercurialManager.getId());
+			return ERROR;
+		}
+
+		return getRedirect("ViewMercurialRepositories.jspa");
 	}
 
 	// This is public for testing purposes
 	public void validateRepositoryParameters() {
 		if (!TextUtils.stringSet(getDisplayName()))
-			addError("displayName", getText("subversion.errors.you.must.specify.a.name.for.the.repository"));
+			addError("displayName", getText("mercurial.errors.you.must.specify.a.name.for.the.repository"));
 		if (!TextUtils.stringSet(getRoot()))
 			addError("root", getText("admin.errors.you.must.specify.the.root.of.the.repository"));
 	}

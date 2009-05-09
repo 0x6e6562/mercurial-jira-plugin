@@ -32,4 +32,6 @@ public interface MercurialRepositoryManager extends Startable
     Collection getRepositoryList();
 
     MercurialManager getRepository(String repoUUID);
+
+    MercurialManager addRepository(Repository r);
 }

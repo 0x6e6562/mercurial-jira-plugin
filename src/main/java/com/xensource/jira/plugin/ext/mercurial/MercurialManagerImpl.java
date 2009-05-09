@@ -7,7 +7,6 @@
 package com.xensource.jira.plugin.ext.mercurial;
 
 import com.atlassian.jira.InfrastructureException;
-import com.atlassian.jira.config.properties.ApplicationProperties;
 import com.xensource.jira.plugin.ext.mercurial.linkrenderer.NullLinkRenderer;
 import com.xensource.jira.plugin.ext.mercurial.linkrenderer.MercurialLinkRenderer;
 import com.xensource.jira.plugin.ext.mercurial.linkrenderer.LinkFormatRenderer;
@@ -18,9 +17,9 @@ import com.xensource.hg.core.io.*;
 import java.util.Map;
 
 public class MercurialManagerImpl implements MercurialManager {
+
     private static Logger log = Logger.getLogger(MercurialManagerImpl.class);
 
-    private final ApplicationProperties applicationProperties;
     private MercurialLinkRenderer linkRenderer;
     private String webLink;
     private ViewLinkFormat viewLinkFormat;
@@ -30,16 +29,14 @@ public class MercurialManagerImpl implements MercurialManager {
     private Map logEntryCache;
     private HGRepository repository;
 
-    public MercurialManagerImpl(ApplicationProperties applicationProperties, MercurialProperties props) {
-        this.applicationProperties = applicationProperties;
+    public MercurialManagerImpl(Repository props) {
         setupEnvironment(props);
     }
 
-    private void setupEnvironment(MercurialProperties props) {
+    private void setupEnvironment(Repository props) {
 
         displayName = props.displayName;
         cloneDir = props.cloneDir;
-        updateRepo = props.updateRepo;
 
         // Now setup web link renderer
         linkRenderer = null;

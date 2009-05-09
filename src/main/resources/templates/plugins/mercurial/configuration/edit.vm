@@ -1,10 +1,11 @@
 <html>
   <head>
-    <title>$action.getText("subversion.add.repository")</title>
+    <title>$action.getText("mercurial.edit.repository")</title>
     <meta name="decorator" content="admin" />
   </head>
   <body>
-			<form onsubmit="if (this.submitted) return false; this.submitted = true; return true" name="jiraform" method="post" action="AddSubversionRepository.jspa"/>
+			<form onsubmit="if (this.submitted) return false; this.submitted = true; return true" name="jiraform" method="post" action="UpdateMercurialRepository.jspa"/>
+				<input type="hidden" name="repoId" value="$repoId" />
 				<table width=100% cellpadding=10 cellspacing=0 border=0>
 					<tr>
 						<td>
@@ -12,12 +13,12 @@
 								 <tbody>
 									 <tr>
 										 <td class="jiraformheader" colspan="2">
-											 <h3 class="formtitle">$action.getText("subversion.add.repository")</h3>
+											 <h3 class="formtitle">$action.getText("mercurial.edit.repository")</h3>
 										 </td>
 									 </tr>
 									 <tr>
 										 <td class="jiraformheader" colspan="2">
-											 Use this page to add a new Subversion repository.
+											 Use this page to edit a Mercurial repository.
 										</td>
 									 </tr>
 									 #if ($action.hasAnyErrors())
@@ -37,11 +38,11 @@
 										 </td>
 									 </tr>
 									 #end
-									 #parse("templates/plugins/subversion/configuration/properties.vm")
+									 #parse("templates/plugins/mercurial/configuration/properties.vm")
 								 <tr>
 										 <td colspan="2" class="fullyCentered jiraformfooter" >
-								 <input type="submit" name="add" value="$action.getText("common.forms.add")" accesskey="S" title="Press Alt+Shift+S to submit form" class="spaced" />
-											 <input id="cancelButton"  type="button" accesskey="`" title="Cancel (Alt+Shift + `)" name="ViewSubversionRepositories.jspa" value="Cancel" onclick="location.href='ViewSubversionRepositories.jspa'" />
+								 <input type="submit" name="edit" value="$action.getText("common.forms.update")" accesskey="S" title="Press Alt+Shift+S to submit form" class="spaced" />
+											 <input id="cancelButton"  type="button" accesskey="`" title="Cancel (Alt+Shift + `)" name="ViewMercurialRepositories.jspa" value="Cancel" onclick="location.href='ViewMercurialRepositories.jspa'" />
 										 </td>
 									 </tr>
 								 </tbody>

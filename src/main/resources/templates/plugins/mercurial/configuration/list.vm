@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>$action.getText("subversion.repositories")</title>
+    <title>$action.getText("mercurial.repositories")</title>
     <meta name="decorator" content="admin" />
   </head>
 
@@ -10,15 +10,15 @@
     <tbody>
       <tr>
         <td class="jiraformheader">
-          <h3 class="formtitle">$action.getText("subversion.repositories")</h3>
+          <h3 class="formtitle">$action.getText("mercurial.repositories")</h3>
         </td>
       </tr>
       <tr>
         <td class="jiraformbody">
-          <p>$action.getText("subversion.repositories.description")</p>
+          <p>$action.getText("mercurial.repositories.description")</p>
           <p>
             <img width="8" height="8" border="0" src="/jira/images/icons/bullet_creme.gif"/>
-            <a href="AddSubversionRepository!default.jspa"><b>$action.getText("common.forms.add")</b></a>
+            <a href="AddMercurialRepository!default.jspa"><b>$action.getText("common.forms.add")</b></a>
           </p>
         </td>
       </tr>
@@ -54,46 +54,46 @@
                     <b>$repo.getDisplayName()</b>
                 </td>
                 <td valign=top>
-                    <b>$action.getText("subversion.repository.root")</b>: $repo.getRoot()<br>
-                    <b>$action.getText("subversion.repository.status")</b>: #if ($repo.isActive()) $action.getText("admin.common.words.active") #else $action.getText("admin.common.words.inactive") ($repo.getInactiveMessage()) #end<br>
+                    <b>$action.getText("mercurial.repository.root")</b>: $repo.getRoot()<br>
+                    <b>$action.getText("mercurial.repository.status")</b>: #if ($repo.isActive()) $action.getText("admin.common.words.active") #else $action.getText("admin.common.words.inactive") ($repo.getInactiveMessage()) #end<br>
                     #if ($repo.isWebLinking())
                       <br><b>$action.getText("admin.cvsmodules.viewcvs.root.param")</b>: $repo.getWebLink()
                     #end
                     #if ($repo.getViewLinkFormat())
                       #if ($repo.getViewLinkFormat().getCopyFromFormat())
-                      <br><b>$action.getText("subversion.linkformat.path")</b>: $repo.getViewLinkFormat().getCopyFromFormat()
+                      <br><b>$action.getText("mercurial.linkformat.path")</b>: $repo.getViewLinkFormat().getCopyFromFormat()
                       #end
                       #if ($repo.getViewLinkFormat().getChangesetFormat())
-                      <br><b>$action.getText("subversion.linkformat.changeset")</b>: $repo.getViewLinkFormat().getChangesetFormat()
+                      <br><b>$action.getText("mercurial.linkformat.changeset")</b>: $repo.getViewLinkFormat().getChangesetFormat()
                       #end
                       #if ($repo.getViewLinkFormat().getFileAddedFormat())
-                      <br><b>$action.getText("subversion.linkformat.file.added")</b>: $repo.getViewLinkFormat().getFileAddedFormat()
+                      <br><b>$action.getText("mercurial.linkformat.file.added")</b>: $repo.getViewLinkFormat().getFileAddedFormat()
                       #end
                       #if ($repo.getViewLinkFormat().getFileModifiedFormat())
-                      <br><b>$action.getText("subversion.linkformat.file.modified")</b>: $repo.getViewLinkFormat().getFileModifiedFormat()
+                      <br><b>$action.getText("mercurial.linkformat.file.modified")</b>: $repo.getViewLinkFormat().getFileModifiedFormat()
                       #end
                       #if ($repo.getViewLinkFormat().getFileReplacedFormat())
-                      <br><b>$action.getText("subversion.linkformat.file.replaced")</b>: $repo.getViewLinkFormat().getFileReplacedFormat()
+                      <br><b>$action.getText("mercurial.linkformat.file.replaced")</b>: $repo.getViewLinkFormat().getFileReplacedFormat()
                       #end
                       #if ($repo.getViewLinkFormat().getFileDeletedFormat())
-                      <br><b>$action.getText("subversion.linkformat.file.deleted")</b>: $repo.getViewLinkFormat().getFileDeletedFormat()
+                      <br><b>$action.getText("mercurial.linkformat.file.deleted")</b>: $repo.getViewLinkFormat().getFileDeletedFormat()
                       #end
                     #end
                 </td>
 
                 <td valign=top align=left>
-                    <a href="UpdateSubversionRepository!default.jspa?repoId=$repo.getId()">$action.getText("common.words.edit")</a>
+                    <a href="UpdateMercurialRepository!default.jspa?repoId=$repo.getId()">$action.getText("common.words.edit")</a>
                     #if (!$repo.isActive())
-                    | <a href="ActivateSubversionRepository.jspa?repoId=$repo.getId()">$action.getText("admin.common.words.activate")</a>
+                    | <a href="ActivateMercurialRepository.jspa?repoId=$repo.getId()">$action.getText("admin.common.words.activate")</a>
                     #end
-                    | <a href="DeleteSubversionRepository!default.jspa?repoId=$repo.getId()">$action.getText("common.words.delete")</a>
+                    | <a href="DeleteMercurialRepository!default.jspa?repoId=$repo.getId()">$action.getText("common.words.delete")</a>
                 </td>
             </tr>
             #end
             #if ($action.getRepositories().size() == 0)
                 <tr>
                     <td colspan=4 bgcolor=ffffff>
-                        $action.getText("subversion.no.repositories.configured")
+                        $action.getText("mercurial.no.repositories.configured")
                     </td>
                 </tr>
             #end
@@ -103,7 +103,7 @@
 </p>
 
 #else
-	#parse("templates/plugins/subversion/configuration/no-privilege.vm")
+	#parse("templates/plugins/mercurial/configuration/no-privilege.vm")
 #end
 
 </body>

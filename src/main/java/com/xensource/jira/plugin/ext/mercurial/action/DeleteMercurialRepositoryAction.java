@@ -38,7 +38,7 @@ public class DeleteMercurialRepositoryAction extends MercurialActionSupport {
 
 		//getMultipleRepoManager().removeRepository(repoId);
 
-		return getRedirect("ViewSubversionRepositories.jspa");
+		return getRedirect("ViewMercurialRepositories.jspa");
 	}
 
 	public MercurialManager getMercurialManager() {
